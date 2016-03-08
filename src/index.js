@@ -24,49 +24,30 @@ export default class App extends React.Component {
 
   }
 
-  componentWillMount(){
-    this.userRef.on("value", snapshot => {
+  loadData(){
+    this.userRef.on('value', snap => {
       let userInfo = [];
-      snapshot.forEach( data => {
-            console.log('data.val is', data.val());
-            let user = {
-            id: data.val().id,
-            name: data.val().name,
-            contact: data.val().contact,
-            address: data.val().address,
-            email: data.val().email,
-            username: data.val().username,
-            password: data.val().password,
-          }
-          userInfo.push(user);
-          this.setState({ userInfo });
-        });
+      snap.forEach( data => {
+        let userData = data.val();
+        userData.id = data.name();
+        userInfo.push(userData);
+      });
+      this.setState({ userInfo });
     });
 
+    this.userRef.on('child_removed', (dataSnapshot) =>{
+        delete this.state.userInfo[dataSnapshot.key()];
+        this.setState({ userInfo: this.state.userInfo });
+    });
+    
   }
 
   componentDidMount(){
-
+    this.loadData();
   }
 
-    componentWillUnMount(){
-        this.userRef.off();
-    }
-
   createUser(user){
-    // console.log('user is', user.name);
-    let newUser = {
-      id: this.state.userInfo.length + 1,
-      name: user.name,
-      contact: user.contact,
-      address: user.address,
-      email: user.email,
-      username: user.username,
-      password: user.password,
-    }
-    this.userRef.push(newUser);
-    this.setState({ userInfo: this.state.userInfo.concat(newUser) });
-    // console.log(this.state.userInfo);
+    this.userRef.push(user);
   }
 
   saveUser(oldUser, newUser){
@@ -103,7 +84,7 @@ export default class App extends React.Component {
 
   deleteUser(id){
     console.log(id);
-    const dltUserRef = new Firebase(`https://laggers.firebaseio.com/users/${id}`);
+    const dltUserRef = new Firebase('https://laggers.firebaseio.com/users').child(id);
     console.log('dlt',dltUserRef);
     dltUserRef.remove();
   }

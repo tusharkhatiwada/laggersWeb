@@ -4,13 +4,14 @@
   "description": "Real Estate Portal",
   "main": "webpack.config.js",
   "scripts": {
-    "dev":"webpack-dev-server --content-base output --inline --hot",
+    "dev": "webpack-dev-server --content-base output --inline --hot",
     "test": "echo \"Error:no test specified\" && exit 1"
   },
   "author": "Tushant Khatiwada",
   "license": "BSD-2-Clause",
   "dependencies": {
     "backbone": "^1.2.3",
+    "firebase": "^2.4.1",
     "history": "^2.0.0",
     "jquery": "^2.2.0",
     "jsx-loader": "^0.13.2",
